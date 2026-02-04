@@ -1,6 +1,7 @@
 package com.sandaniel.customservice.service;
 
 import com.sandaniel.customservice.model.User;
+import com.sandaniel.customservice.model.util.UserValidator;
 
 public class UserServiceImpl implements UserService{
 
@@ -12,9 +13,8 @@ public class UserServiceImpl implements UserService{
 						   String repeatPassword){
 		
 		
-		if(firstName.isBlank() || firstName == null) {
-			throw new IllegalArgumentException("Users's first name is empty");
-		}
+		UserValidator.validateUserFirstName(firstName);
+		UserValidator.validateUserFirstName(lastName);
 		return new User(firstName, lastName, email, password, repeatPassword);
 	}
 

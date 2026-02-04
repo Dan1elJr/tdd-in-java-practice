@@ -72,6 +72,27 @@ public class UserServiceTest {
 	}
 	
 	
+	@DisplayName("If lastName is empty")
+	@Test
+	void testCreateUser_whenLastNameIsEmpty_throwsIllegalArgumentException() {
+	
+		// Arrange
+		String lastName ="";
+		String expecteExceptionMessage = "Users's first name is empty";
+		
+		// Act & Assert
+		IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, ()->{
+			userService.createUser(firstName, lastName, email, password, repeatPassword);
+		
+		},()->"Empty last name should have caused an illegal Argument Exception");
+		
+		//Assert
+		
+		assertEquals(expecteExceptionMessage, thrown.getMessage(), ()->"Should return IllegalArgumentException");
+		
+	}
+	
+	
 	
 	
 }
