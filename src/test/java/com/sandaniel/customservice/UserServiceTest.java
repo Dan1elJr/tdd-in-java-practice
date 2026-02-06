@@ -3,21 +3,32 @@ package com.sandaniel.customservice;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.lenient;
 
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.sandaniel.customservice.data.UserRepository;
 import com.sandaniel.customservice.model.User;
-import com.sandaniel.customservice.service.UserService;
 import com.sandaniel.customservice.service.UserServiceImpl;
 
-
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 	
-	UserService userService;
+	@InjectMocks
+	UserServiceImpl userService;
+	
+	@Mock
+	UserRepository userRepository;
+	
 	String id;
 	String firstName;
 	String lastName;
@@ -27,7 +38,6 @@ public class UserServiceTest {
 	
 	@BeforeEach
 	public void init () {
-		this.userService = new UserServiceImpl();
 		id = UUID.randomUUID().toString();
 		firstName = "Daniel";
 		lastName = "San";
@@ -39,7 +49,9 @@ public class UserServiceTest {
 	@DisplayName("User object created")
 	@Test
 	void testCreateUser_whenUserDetailsProvides_returnsUserObject() {
-
+		// Arrange
+		Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(true);
+		
 		// Act	
 		User user = userService.createUser(id,firstName,lastName,email);
 			
