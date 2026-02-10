@@ -3,7 +3,6 @@ package com.sandaniel.customservice;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.lenient;
 
 import java.util.UUID;
 
@@ -61,6 +60,7 @@ public class UserServiceTest {
 		assertEquals(lastName, user.getLastName(),()->"User's last name is incorrect");
 		assertEquals(email, user.getEmail(),()->"User's email is incorrect");
 		assertNotNull(user.getId(),()->"User id is missing");
+		Mockito.verify(userRepository,Mockito.times(1)).save(Mockito.any(User.class));
 	}
 	
 	@DisplayName("If firstName is empty")
