@@ -7,9 +7,11 @@ import com.sandaniel.customservice.model.util.UserValidator;
 public class UserServiceImpl implements UserService{
 	
 	private UserRepository userRepository;
+	private EmailVerificationService emailVerificationService;
 	
-	public UserServiceImpl(UserRepository userRepository) {
+	public UserServiceImpl(UserRepository userRepository, EmailVerificationService emailVerificationService) {
 		this.userRepository = userRepository;
+		this.emailVerificationService = emailVerificationService;
 	}
 	
 
@@ -47,6 +49,14 @@ public class UserServiceImpl implements UserService{
 		boolean isUserCreated = userRepository.save(user);
 		
 		if(!isUserCreated) throw new UserServiceException("Could not create user");
+		
+		try {
+			emailVerificationService.scheduleEmailConfirmation(user);
+		}
+		catch (RuntimeException exc) {
+			throw new UserServiceException(exc.getMessage());
+		}
+		
 		return new User(id,firstName, lastName, email);
 	}
 
