@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.sandaniel.customservice.data.UserRepository;
 import com.sandaniel.customservice.model.User;
+import com.sandaniel.customservice.service.UserServiceException;
 import com.sandaniel.customservice.service.UserServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,7 +60,7 @@ public class UserServiceTest {
 		assertEquals(firstName, user.getFirstName(), ()-> "User's first name is incorrect");
 		assertEquals(lastName, user.getLastName(),()->"User's last name is incorrect");
 		assertEquals(email, user.getEmail(),()->"User's email is incorrect");
-		assertNotNull(user.getId(),()->"User's id is missing");
+		assertNotNull(user.getId(),()->"User'sgit  id is missing");
 		Mockito.verify(userRepository,Mockito.times(1)).save(Mockito.any(User.class));
 	}
 	
@@ -104,6 +105,19 @@ public class UserServiceTest {
 		
 	}
 	
+	@DisplayName("If save() method causes RuntimeException, a UserServiceExption is thrown")
+	@Test
+	void testCreateUser_whenSaveMethodThrowsException_thenThrowsUserServiceException() {
+		// Arrange
+		Mockito.when(userRepository.save(Mockito.any(User.class))).thenThrow(RuntimeException.class);
+		
+		// Act & Assert
+		assertThrows(UserServiceException.class, ()->{
+			userService.createUser(firstName, lastName, email, password, repeatPassword);
+		}, ()->"Should have thrown UserServiceException instead");
+		
+		// Act
+	}
 	
 	
 	
