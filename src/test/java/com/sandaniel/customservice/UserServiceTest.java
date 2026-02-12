@@ -142,7 +142,6 @@ public class UserServiceTest {
 		.when(emailVerificationService)
 		.scheduleEmailConfirmation(Mockito.any(User.class));
 		
-		
 		// Act & Assert
 			
 		assertThrows(UserServiceException.class, ()->{
