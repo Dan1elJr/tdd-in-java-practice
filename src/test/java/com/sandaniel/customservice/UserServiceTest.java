@@ -70,7 +70,7 @@ public class UserServiceTest {
 		assertEquals(firstName, user.getFirstName(), ()-> "User's first name is incorrect");
 		assertEquals(lastName, user.getLastName(),()->"User's last name is incorrect");
 		assertEquals(email, user.getEmail(),()->"User's email is incorrect");
-		assertNotNull(user.getId(),()->"User'sgit  id is missing");
+		assertNotNull(user.getId(),()->"User's id is missing");
 		Mockito.verify(userRepository,Mockito.times(1)).save(Mockito.any(User.class));
 	}
 	
