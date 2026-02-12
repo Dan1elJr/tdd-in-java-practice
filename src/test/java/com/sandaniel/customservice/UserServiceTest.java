@@ -3,6 +3,9 @@ package com.sandaniel.customservice;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.util.UUID;
 
@@ -17,6 +20,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.sandaniel.customservice.data.UserRepository;
 import com.sandaniel.customservice.model.User;
+import com.sandaniel.customservice.service.EmailNotificationServiceException;
+import com.sandaniel.customservice.service.EmailVerificationService;
+import com.sandaniel.customservice.service.EmailVerificationServiceImpl;
 import com.sandaniel.customservice.service.UserServiceException;
 import com.sandaniel.customservice.service.UserServiceImpl;
 
@@ -28,6 +34,10 @@ public class UserServiceTest {
 	
 	@Mock
 	UserRepository userRepository;
+	
+	
+	@Mock
+	EmailVerificationServiceImpl emailVerificationService;
 	
 	String id;
 	String firstName;
@@ -118,6 +128,31 @@ public class UserServiceTest {
 		
 	}
 	
-	
+	@Test
+	@DisplayName("EmailNotificationException is handled")
+	void testCreateUser_whenEmailNotificationExceptionThrown_throwsUserServiceException() {
+		
+		// Arrange
+			
+		Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(true);
+		
+		
+		
+		doThrow(EmailNotificationServiceException.class)
+		.when(emailVerificationService)
+		.scheduleEmailConfirmation(Mockito.any(User.class));
+		
+		
+		// Act & Assert
+			
+		assertThrows(UserServiceException.class, ()->{
+			userService.createUser(firstName, lastName, email, password, repeatPassword);
+		},()->"Should have thrown UserServiceException instead");
+		
+		// Assert
+		verify(emailVerificationService, times(1)).scheduleEmailConfirmation(Mockito.any(User.class));
+		
+		
+	}
 	
 }
