@@ -3,6 +3,8 @@ package com.sandaniel.customservice;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -140,8 +142,10 @@ public class UserServiceTest {
 		.scheduleEmailConfirmation(Mockito.any(User.class));
 		
 		// Disabling doThrow
-		Mockito.doNothing().when(emailVerificationService)
-		.scheduleEmailConfirmation(Mockito.any(User.class));
+		/*
+		 * Mockito.doNothing().when(emailVerificationService)
+		 * .scheduleEmailConfirmation(Mockito.any(User.class));
+		 */
 		
 		// Act & Assert
 			
@@ -155,5 +159,25 @@ public class UserServiceTest {
 		
 		
 	}
+	
+	void testCreateUser_whenUserCreated_schedulesEmailConfirmation() {
+		
+		// Arrange
+		Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(true);
+		
+		doCallRealMethod().when(emailVerificationService)
+		.scheduleEmailConfirmation(Mockito.any(User.class));
+		
+		// Act
+		
+		userService.createUser(firstName, lastName, email, password, repeatPassword);
+		
+		// Assert
+		
+		verify(emailVerificationService,times(1)).scheduleEmailConfirmation(Mockito.any(User.class));
+		
+		
+	}
+	
 	
 }
