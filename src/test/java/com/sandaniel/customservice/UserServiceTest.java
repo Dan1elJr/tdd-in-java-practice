@@ -21,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.sandaniel.customservice.data.UserRepository;
 import com.sandaniel.customservice.model.User;
 import com.sandaniel.customservice.service.EmailNotificationServiceException;
-import com.sandaniel.customservice.service.EmailVerificationService;
 import com.sandaniel.customservice.service.EmailVerificationServiceImpl;
 import com.sandaniel.customservice.service.UserServiceException;
 import com.sandaniel.customservice.service.UserServiceImpl;
@@ -136,10 +135,12 @@ public class UserServiceTest {
 			
 		Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(true);
 		
-		
-		
 		doThrow(EmailNotificationServiceException.class)
 		.when(emailVerificationService)
+		.scheduleEmailConfirmation(Mockito.any(User.class));
+		
+		// Disabling doThrow
+		Mockito.doNothing().when(emailVerificationService)
 		.scheduleEmailConfirmation(Mockito.any(User.class));
 		
 		// Act & Assert
@@ -149,7 +150,8 @@ public class UserServiceTest {
 		},()->"Should have thrown UserServiceException instead");
 		
 		// Assert
-		verify(emailVerificationService, times(1)).scheduleEmailConfirmation(Mockito.any(User.class));
+		verify(emailVerificationService, times(1))
+		.scheduleEmailConfirmation(Mockito.any(User.class));
 		
 		
 	}

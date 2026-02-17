@@ -37,6 +37,13 @@ public class UserServiceImpl implements UserService{
 		}
 		if(!isUserCreated) throw new UserServiceException("Could not create user");
 		
+		try {
+			emailVerificationService.scheduleEmailConfirmation(user);
+		}
+		catch (RuntimeException exc) {
+			throw new UserServiceException(exc.getMessage());
+		}
+		
 		return user;
 	}
 
