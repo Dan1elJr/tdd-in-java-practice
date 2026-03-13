@@ -1,0 +1,13 @@
+Wanted but not invoked:
+emailVerificationService.scheduleEmailConfirmation(
+    <any com.sandaniel.customservice.model.User>
+);
+-> at com.sandaniel.customservice.service.EmailVerificationServiceImpl.scheduleEmailConfirmation(EmailVerificationServiceImpl.java:11)
+Actually, there were zero interactions with this mock.
+
+	at com.sandaniel.customservice.service.EmailVerificationServiceImpl.scheduleEmailConfirmation(EmailVerificationServiceImpl.java:11)
+	at com.sandaniel.customservice.UserServiceTest.testCreateUser_whenEmailNotificationExceptionThrown_throwsUserServiceException(UserServiceTest.java:152)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
